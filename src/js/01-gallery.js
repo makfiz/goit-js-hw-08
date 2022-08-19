@@ -4,24 +4,19 @@ import { galleryItems } from './gallery-items';
 // Change code below this line
 
 const galleryContainer = document.querySelector(".gallery")
-let modal
 galleryContainer.addEventListener("click", onImgConainerClick)
 
 
 const galleryItemsTemplate = galleryItems.map(({ preview, original, description }) => {
-  return ` <div class="gallery__item">
-    <a class="gallery__link" href="${original}">
-        <img
-        class="gallery__image"
-        src="${preview}"
-        data-source="${original}"
-        alt="${description}"
-        />
-    </a>
-    </div> `
+  return `<a class="gallery__item" href="${original}"><img class="gallery__image" src="${preview}" alt="${description}" /></a>`
 }).join("")
 galleryContainer.insertAdjacentHTML('beforeend', galleryItemsTemplate)
 
+
+let gallery = new SimpleLightbox('.gallery a', {
+    captionsData: "alt",
+    captionDelay: 250,  
+});  
 
 function onImgConainerClick(evt) {
     evt.preventDefault();
@@ -29,25 +24,6 @@ function onImgConainerClick(evt) {
     if (evt.target.nodeName !== 'IMG') {
         return
     }
-    
-   makeModal(evt.target).show();
-
-    if (modal.visible()) {
-    document.addEventListener("keydown", onModalEscClose);
-}
-}
-
-
-function makeModal(e) {
-   return  modal = basicLightbox
-        .create(`<img src="${e.dataset.source}" width="1280">`)
-}
-
-
-function onModalEscClose(event) {
-    if (event.key !== "Escape") {
-        return
-    }
-    modal.close()
-    document.removeEventListener("keydown", onModalEscClose);
+  
+    gallery.on('show.simplelightbox');   
 }
